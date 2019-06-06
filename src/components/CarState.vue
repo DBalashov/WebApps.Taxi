@@ -19,8 +19,7 @@
         @Prop() private currentCar!: IEnumDeviceItem;
         @Prop() private commandStatusCar!: ICommandResultItem | undefined;
         @Prop() private commandStatusOk!: DCStatus;
-
-        private readonly commandName = 'GET'; // MOUT1
+        @Prop() private commandName!: string;
 
         private changeState(value: string): void {
             connector.SendCommand([this.currentCar.ID], this.commandName, [value]).then((r: string[]) => {

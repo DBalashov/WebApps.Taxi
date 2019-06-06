@@ -52,7 +52,7 @@
     export default class Journal extends Vue {
         @Prop() private currentCar!: IEnumDeviceItem | null;
         @Prop() private cars!: any;
-        @Prop() private commandValue!: DeviceCommandType;
+        @Prop() private commandName!: string;
 
         private readonly historyPeriodDays = 7;
 
@@ -66,7 +66,7 @@
                 this.log = [];
 
                 connector.GetCommandLog(sd, ed).then((r: ICommandResultItem[]) => {
-                    const log: ICommandResultItem[] = r.filter((i: ICommandResultItem) => i.Command == this.commandValue);
+                    const log: ICommandResultItem[] = r.filter((i: ICommandResultItem) => i.Name == this.commandName);
 
                     log.reverse();
 

@@ -23,9 +23,9 @@
                 </section>
                 <section class="panels__journal">
                     <template v-if="currentCar != null">
-                        <CarState v-bind:currentCar="currentCar" v-bind:commandStatusCar="commandStatusCars[currentCar.ID]" v-bind:commandStatusOk="commandStatusOk"></CarState>
+                        <CarState v-bind:currentCar="currentCar" v-bind:commandStatusCar="commandStatusCars[currentCar.ID]" v-bind:commandStatusOk="commandStatusOk" v-bind:commandName="commandName"></CarState>
                     </template>
-                    <Journal v-bind:currentCar="currentCar" v-bind:cars="cars" v-bind:commandValue="commandValue"></Journal>
+                    <Journal v-bind:currentCar="currentCar" v-bind:cars="cars" v-bind:commandName="commandName"></Journal>
                 </section>
                 <footer class="footer">
                     &copy;&thinsp;AutoGRAPH
@@ -61,7 +61,7 @@
         }
     })
     export default class App extends Vue {
-        private readonly commandValue = 0; // enum GET
+        private readonly commandName = 'MOUT1';
         private readonly commandStatusOk = 1;
         private map: L.Map | undefined;
         private layerCars: L.LayerGroup = L.layerGroup([], {});
@@ -98,7 +98,7 @@
             $bus.$on('ResultCommandsLog', (r: ICommandResultItem[]) => {
                 this.commandStatusCars = {};
                 r.forEach((item: ICommandResultItem) => {
-                    if (item.Command == this.commandValue && ! this.commandStatusCars[item.IDCAR]) {
+                    if (item.Name == this.commandName && ! this.commandStatusCars[item.IDCAR]) {
                         this.commandStatusCars[item.IDCAR] = item;
                     }
                 });
