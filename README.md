@@ -1,4 +1,4 @@
-# taxi2
+# Taxi
 
 ## Project setup
 ```
