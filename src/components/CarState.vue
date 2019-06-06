@@ -1,7 +1,7 @@
 <template>
-    <div v-bind:class="{'car-state': true, 'car-state--on': status == 1, 'car-state--off': status != 1}">
-        Состояние: <span class="car-state__value">{{ status == 1 ? 'включено' : 'выключено' }}</span>,
-        <button @click="changeState" class="car-state__control">{{ status == 1 ? 'выключить' : 'включить' }}</button>
+    <div v-bind:class="{'car-state': true, 'car-state--on': status == commandStatusOk, 'car-state--off': status != commandStatusOk}">
+        Состояние: <span class="car-state__value">{{ status == commandStatusOk ? 'включено' : 'выключено' }}</span>,
+        <button @click="changeState" class="car-state__control">{{ status == commandStatusOk ? 'выключить' : 'включить' }}</button>
     </div>
 </template>
 
@@ -14,15 +14,12 @@
     export default class CarState extends Vue {
         @Prop() private currentCar!: IEnumDeviceItem;
         @Prop() private status!: DCStatus;
+        @Prop() private commandStatusOk!: DCStatus;
 
-        private readonly commandName = 'GET';
-
-        private mounted(): void {
-
-        }
+        private readonly commandName = 'GET'; // MOUT1
 
         private changeState(): void {
-            connector.SendCommand([this.currentCar.ID], this.commandName).then((r: string[]) => {
+            connector.SendCommand([this.currentCar.ID], this.commandName, [this.status == this.commandStatusOk ? '0' : '1']).then((r: string[]) => {
                 $bus.$emit('ChangeCarState', this.status != DCStatus.OK);
             });
         }
@@ -34,11 +31,11 @@
         margin-bottom: 1em;
 
         &--on &__control {
-            background: #d84d4d;
+            background: #e55039;
         }
 
         &--off &__control {
-            background: #47bb00;
+            background: #b8e994;
         }
 
         &__control {

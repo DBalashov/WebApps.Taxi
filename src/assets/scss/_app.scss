@@ -43,7 +43,7 @@ button {
     &__logo {
         margin-right: 1em;
         font-size: 1.25em;
-        color: #ffc65d;
+        color: #f6b93b;
     }
 }
 
@@ -93,19 +93,6 @@ button {
 
 .map {
     height: 100vh;
-}
-
-.stop-point {
-    background-color: rgba(30,125,52, 0.7);
-    color: white;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 1.1em;
-    padding: 0;
-    border: 2px solid #185a27;
-    width: 2.6rem !important;
-    height: 2.6rem !important;
-    padding-top: 0.25rem;
 }
 
 .car-marker {
@@ -257,23 +244,63 @@ button {
 
 // ---
 
+.icon-reload {
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    margin: 4px;
+    border: 2px solid;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    font-style: normal;
+    color: currentColor;
+    text-align: left;
+    text-indent: -9999px;
+    direction: ltr;
+
+
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-width: 6px;
+        border-style: solid;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    }
+
+    &:before {
+        transform: rotate(-45deg);
+        right: -7px;
+        top: 0;
+        border-right-color: transparent;
+    }
+
+    &:after {
+        transform: rotate(135deg);
+        left: -7px;
+        bottom: 0;
+        border-right-color: transparent;
+    }
+}
+
+// ---
+
 .alert {
     position: relative;
     padding: 0.75rem 1.25rem;
     margin-bottom: 1rem;
     border: 1px solid transparent;
-    border-radius: 0.25rem;
 
     &-primary {
         color: #004085;
         background-color: #cce5ff;
         border-color: #b8daff;
-    }
-
-    &-success {
-        color: #155724;
-        background-color: #d4edda;
-        border-color: #c3e6cb;
     }
 }
 

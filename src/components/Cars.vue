@@ -4,7 +4,8 @@
                     v-bind:treeGroups="treeGroups"
                     v-bind:treeCars="treeCars"
                     v-bind:activeItem="activeItem"
-                    v-bind:commandStatusCars="commandStatusCars">
+                    v-bind:commandStatusCars="commandStatusCars"
+                    v-bind:commandStatusOk="commandStatusOk">
         </CarsItem>
     </div>
 </template>
@@ -12,6 +13,7 @@
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
     import { $bus } from '../main';
+    import { DCStatus } from '../assets/ts/ServiceConnector';
     import CarsItem from '@/components/CarsItem.vue';
 
     @Component({
@@ -23,6 +25,7 @@
         @Prop() private treeGroups!: any;
         @Prop() private treeCars!: any;
         @Prop() private commandStatusCars!: any;
+        @Prop() private commandStatusOk!: DCStatus;
 
         private activeItem: string = '';
 
@@ -37,7 +40,7 @@
     .cars {
         height: 50vh;
         overflow: auto;
-        padding: .5em 0 0 1em;
+        padding: .5em 0 .5em 1em;
 
         &__list {
             padding-left: .75em;
@@ -49,8 +52,8 @@
             align-items: center;
             border-bottom: 1px solid #eee;
 
-            &:hover &-link {
-                background: rgba(255, 198, 93, 0.25);
+            &:hover {
+                background: rgba(246, 185, 59, 0.25);
             }
 
             &-link {
@@ -59,13 +62,16 @@
             }
         }
 
+        &__vrn {
+            width: 6em;
+        }
+
         &__state {
             position: relative;
             display: inline-block;
             width: 20px;
             height: 20px;
             margin-left: .5px;
-            cursor: pointer;
 
             &:before {
                 content: '';
@@ -79,16 +85,16 @@
             }
 
             &--on:before {
-                background: #47bb00;
+                background: #78e08f;
             }
 
             &--off:before {
-                background: #f00;
+                background: #e55039;
             }
         }
 
-        &__item--active > &__name &__name-link {
-            background: #ffc65d;
+        &__item--active > &__name {
+            background: #f6b93b;
         }
     }
 </style>

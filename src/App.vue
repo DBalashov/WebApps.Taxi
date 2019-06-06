@@ -9,7 +9,7 @@
                     </div>
                 </header>
                 <section class="panels__carlist">
-                    <Cars v-bind:treeGroups="treeGroups" v-bind:treeCars="treeCars" v-bind:commandStatusCars="commandStatusCars"></Cars>
+                    <Cars v-bind:treeGroups="treeGroups" v-bind:treeCars="treeCars" v-bind:commandStatusCars="commandStatusCars" v-bind:commandStatusOk="commandStatusOk"></Cars>
                 </section>
                 <section class="panels__info">
                     <template v-if="currentCar != null">
@@ -23,9 +23,9 @@
                 </section>
                 <section class="panels__journal">
                     <template v-if="currentCar != null">
-                        <CarState v-bind:currentCar="currentCar" v-bind:status="commandStatusCars[currentCar.ID]"></CarState>
+                        <CarState v-bind:currentCar="currentCar" v-bind:status="commandStatusCars[currentCar.ID]" v-bind:commandStatusOk="commandStatusOk"></CarState>
                     </template>
-                    <Journal v-bind:currentCar="currentCar" v-bind:cars="cars"></Journal>
+                    <Journal v-bind:currentCar="currentCar" v-bind:cars="cars" v-bind:commandValue="commandValue"></Journal>
                 </section>
                 <footer class="footer">
                     &copy;&thinsp;AutoGRAPH
@@ -62,6 +62,7 @@
     })
     export default class App extends Vue {
         private readonly commandValue = 0; // enum GET
+        private readonly commandStatusOk = 1;
         private map: L.Map | undefined;
         private layerCars: L.LayerGroup = L.layerGroup([], {});
         private carGroups: any = {};
@@ -84,8 +85,8 @@
             });
 
             $bus.$on('SelectCarItem', (id: string) => {
-                const sd = moment().startOf('day').add('day', -1).toDate();
-                const ed = moment(sd).add('day', 2).toDate();
+                const sd = moment().startOf('day').add(-1, 'day').toDate();
+                const ed = moment(sd).add(2, 'day').toDate();
                 this.currentCar = this.cars[id];
                 this.CurrentTrip.Build(this.currentCar as IEnumDeviceItem, sd, ed);
             });

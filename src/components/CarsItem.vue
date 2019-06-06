@@ -10,14 +10,20 @@
                                 v-bind:treeGroups="treeGroups"
                                 v-bind:treeCars="treeCars"
                                 v-bind:activeItem="activeItem"
-                                v-bind:commandStatusCars="commandStatusCars">
+                                v-bind:commandStatusCars="commandStatusCars"
+                                v-bind:commandStatusOk="commandStatusOk">
                     </CarsItem>
                 </template>
                 <template v-if="treeCars[group.ID]">
                     <div v-for="item in treeCars[group.ID]" v-bind:class="{ 'cars__item': true, 'cars__item--active': item.ID == activeItem }">
-                        <div class="cars__name">
-                            <a href="#no-click" class="cars__name-link" @click="clickCarItem(item.ID, $event)">{{ item.Name }}</a>
-                            <span v-bind:class="{'cars__state': true, 'cars__state--on': commandStatusCars[item.ID] && commandStatusCars[item.ID] == 1, 'cars__state--off': ! commandStatusCars[item.ID] || commandStatusCars[item.ID] && commandStatusCars[item.ID] != 1}"></span>
+                        <div class="cars__name" @click="clickCarItem(item.ID)">
+                            <span class="cars__name-link">{{ item.Name }}</span>
+                            <template v-for="p in item.Properties">
+                                <span v-if="p.Name == 'VehicleRegNumber'" class="cars__vrn">
+                                    {{ p.Value }}
+                                </span>
+                            </template>
+                            <span v-bind:class="{'cars__state': true, 'cars__state--on': commandStatusCars[item.ID] && commandStatusCars[item.ID] == commandStatusOk, 'cars__state--off': ! commandStatusCars[item.ID] || commandStatusCars[item.ID] && commandStatusCars[item.ID] != 1}"></span>
                         </div>
                     </div>
                 </template>
@@ -28,20 +34,17 @@
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { $bus } from '../main';
     import { DCStatus } from '../assets/ts/ServiceConnector';
+    import { $bus } from '../main';
 
     @Component
     export default class CarsItem extends Vue {
         @Prop() private treeGroups!: any;
         @Prop() private treeCars!: any;
         @Prop() private commandStatusCars!: any;
+        @Prop() private commandStatusOk!: DCStatus;
         @Prop() private parentID!: string;
         @Prop() private activeItem!: string;
-
-        private mounted() {
-
-        }
 
         private clickGroupItem(id: string, e: MouseEvent): void {
             e.preventDefault();
@@ -49,9 +52,7 @@
             $bus.$emit('SelectGroupItem', id);
         }
 
-        private clickCarItem(id: string, e: MouseEvent): void {
-            e.preventDefault();
-
+        private clickCarItem(id: string): void {
             $bus.$emit('SelectCarItem', id);
         }
     }

@@ -112,26 +112,6 @@ export class CarTrip {
             opacity: 0.5
         }).addTo(this.layerTrip);
 
-        for (let i = 0, index = 1; i < this.Items.length; i++) {
-            let pnt = this.Items[i];
-            if (pnt.Type > 0) {
-                let marker = L.marker(pnt.PStart, {
-                        icon: L.divIcon({
-                            html: '<div class="stop-point__number">'+(index + 1)+'</div><div class="stop-point__time">'+pnt.S.T+'</div>',
-                            className: 'stop-point'
-                        })
-                    });
-
-                if (pnt.GF) {
-                    marker.bindTooltip(pnt.GF.Name)
-                }
-
-                marker.addTo(this.layerTrip);
-
-                index++;
-            }
-        }
-
         if (this.map)
             this.map.fitBounds(bounds);
     }

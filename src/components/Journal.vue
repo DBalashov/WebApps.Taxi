@@ -6,19 +6,28 @@
                     <thead>
                         <tr>
                             <th v-if="currentCar == null">ТС</th>
-                            <th>Команда</th>
+                            <th>Команда &nbsp;</th>
                             <th>Дата</th>
                             <th>Ответ</th>
-                            <th>Статус</th>
+                            <th>
+                                <div class="journal__control">
+                                    <span class="journal__control-caption">Статус</span>
+                                    <button @click="refresh()" class="journal__refresh"><i class="icon-reload"></i></button>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="item in log">
                             <td v-if="currentCar == null">{{ cars[item.IDCAR].Name }}<br /><small>№{{ item.Serial }}</small></td>
-                            <td>{{ item.Command }}</td>
+                            <td v-if="item.Arguments.indexOf('1') == -1">off</td>
+                            <td v-else>on</td>
                             <td>{{ item.DT }}</td>
                             <td>{{ item.ResponseDT }}</td>
-                            <td>{{ item.Status }}</td>
+                            <td v-if="item.Status == 0">InProgress</td>
+                            <td v-if="item.Status == 1">OK</td>
+                            <td v-if="item.Status == 2">Failed</td>
+                            <td v-if="item.Status == 3">Timeout</td>
                         </tr>
                     </tbody>
                 </table>
@@ -35,7 +44,7 @@
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
     import { connector, $bus } from '../main';
-    import { IEnumDeviceItem, ICommandResultItem } from '../assets/ts/ServiceConnector';
+    import { IEnumDeviceItem, ICommandResultItem, DeviceCommandType } from '../assets/ts/ServiceConnector';
     import { getDT } from '../assets/ts/Extenders';
     import moment from 'moment';
 
@@ -43,27 +52,28 @@
     export default class Journal extends Vue {
         @Prop() private currentCar!: IEnumDeviceItem | null;
         @Prop() private cars!: any;
+        @Prop() private commandValue!: DeviceCommandType;
 
         private log: ICommandResultItem[] = [];
 
         private mounted(): void {
             $bus.$on('RefreshCommandsLog', () => {
-                const sd = moment().startOf('day').add('day', -2).toDate();
+                const sd = moment().startOf('day').add(-2, 'day').toDate();
                 const ed = moment().toDate();
 
                 this.log = [];
 
                 connector.GetCommandLog(sd, ed).then((r: ICommandResultItem[]) => {
-                    const log: ICommandResultItem[] = [];
+                    const log: ICommandResultItem[] = r.filter((i: ICommandResultItem) => i.Command == this.commandValue);
 
-                    r.reverse();
+                    log.reverse();
 
-                    $bus.$emit('ResultCommandsLog', r);
+                    $bus.$emit('ResultCommandsLog', log);
 
                     if (this.currentCar == null) {
-                        this.log = r;
+                        this.log = log;
                     } else {
-                        r.forEach((item: ICommandResultItem) => {
+                        log.forEach((item: ICommandResultItem) => {
                             if (this.currentCar != null && this.currentCar.ID == item.IDCAR) {
                                 this.log.push(item);
                             }
@@ -92,9 +102,11 @@
                 });
             });
 
-            this.$watch('currentCar', () => {
-                $bus.$emit('RefreshCommandsLog');
-            });
+            this.$watch('currentCar', () => this.refresh());
+        }
+
+        private refresh(): void {
+            $bus.$emit('RefreshCommandsLog');
         }
     }
 </script>
@@ -110,7 +122,7 @@
             }
         }
 
-        &__table {
+        table#{&}__table {
             th,
             td {
                 &:first-child {
@@ -121,6 +133,28 @@
                     padding-right: .5em;
                 }
             }
+
+            th {
+                vertical-align: middle;
+                white-space: nowrap;
+            }
+        }
+
+        &__control {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+
+            &-caption {
+                flex: 1;
+            }
+        }
+
+        &__refresh {
+            border: 0;
+            padding: .25em .3em;
+            line-height: 1;
+            background: none;
         }
     }
 </style>

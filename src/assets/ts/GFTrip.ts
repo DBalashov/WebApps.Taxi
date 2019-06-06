@@ -10,7 +10,7 @@ export class GFTrip {
     Items: any[] = [];
 
     public Show(p: IGeofenceItem) {
-        let sd = moment().startOf('month').add('month', -1).toDate();
+        let sd = moment().startOf('month').add(-1, 'month').toDate();
         let ed = new Date();
 
         this.S = getDT(sd);

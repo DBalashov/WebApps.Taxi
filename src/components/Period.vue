@@ -22,6 +22,10 @@
         margin-bottom: 1em;
         white-space: nowrap;
 
+        & > * {
+            vertical-align: middle;
+        }
+
         &__date {
             padding: 0 4px;
         }

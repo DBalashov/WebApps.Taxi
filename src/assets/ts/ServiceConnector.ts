@@ -331,14 +331,14 @@ export class ServiceConnector {
             });
     }
 
-    public SendCommand(ids: string[], commandName: string, params?: string) {
+    public SendCommand(ids: string[], commandName: string, params: string[] = []) {
         return this.post<string[]>('SendCommand',
             {
                 session: this.token,
                 schemaID: this.schemaID,
                 IDs: ids.join(','),
                 commandName: commandName,
-                arguments: params
+                arguments: params.join(',')
             });
     }
 
@@ -630,6 +630,7 @@ export interface ICacheFindResultItem {
 
 export interface ICommandResultItem {
     Command: DeviceCommandType;
+    Arguments: string[];
     DT: string;
     ID: number;
     IDCAR: string;
