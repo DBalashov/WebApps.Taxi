@@ -23,7 +23,7 @@
                 </section>
                 <section class="panels__journal">
                     <template v-if="currentCar != null">
-                        <CarState v-bind:currentCar="currentCar" v-bind:status="commandStatusCars[currentCar.ID]" v-bind:commandStatusOk="commandStatusOk"></CarState>
+                        <CarState v-bind:currentCar="currentCar" v-bind:commandStatusCar="commandStatusCars[currentCar.ID]" v-bind:commandStatusOk="commandStatusOk"></CarState>
                     </template>
                     <Journal v-bind:currentCar="currentCar" v-bind:cars="cars" v-bind:commandValue="commandValue"></Journal>
                 </section>
@@ -98,8 +98,8 @@
             $bus.$on('ResultCommandsLog', (r: ICommandResultItem[]) => {
                 this.commandStatusCars = {};
                 r.forEach((item: ICommandResultItem) => {
-                    if (item.Command == this.commandValue) {
-                        this.commandStatusCars[item.IDCAR] = item.Status;
+                    if (item.Command == this.commandValue && ! this.commandStatusCars[item.IDCAR]) {
+                        this.commandStatusCars[item.IDCAR] = item;
                     }
                 });
             });
@@ -117,8 +117,7 @@
 
             this.map.addLayer(L.tileLayer('//{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
                 updateWhenIdle: true,
-                detectRetina: true,
-
+                detectRetina: true
             }))
             .setView([55.5, 61.2], 13)
             .addLayer(this.layerCars)
@@ -192,5 +191,4 @@
     @import './assets/scss/reset';
     @import '~leaflet/dist/leaflet.css';
     @import './assets/scss/app';
-
 </style>

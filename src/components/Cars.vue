@@ -84,6 +84,10 @@
                 border-radius: 50%;
             }
 
+            &--unknown:before {
+                background: #ccc;
+            }
+
             &--on:before {
                 background: #78e08f;
             }

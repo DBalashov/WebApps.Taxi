@@ -23,7 +23,7 @@
                                     {{ p.Value }}
                                 </span>
                             </template>
-                            <span v-bind:class="{'cars__state': true, 'cars__state--on': commandStatusCars[item.ID] && commandStatusCars[item.ID] == commandStatusOk, 'cars__state--off': ! commandStatusCars[item.ID] || commandStatusCars[item.ID] && commandStatusCars[item.ID] != 1}"></span>
+                            <span v-bind:class="{'cars__state': true, 'cars__state--unknown': state(commandStatusCars[item.ID]) === 0, 'cars__state--on': state(commandStatusCars[item.ID]) === 1, 'cars__state--off': state(commandStatusCars[item.ID]) === -1}"></span>
                         </div>
                     </div>
                 </template>
@@ -34,7 +34,7 @@
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { DCStatus } from '../assets/ts/ServiceConnector';
+    import { DCStatus, ICommandResultItem } from '../assets/ts/ServiceConnector';
     import { $bus } from '../main';
 
     @Component
@@ -54,6 +54,13 @@
 
         private clickCarItem(id: string): void {
             $bus.$emit('SelectCarItem', id);
+        }
+
+        private state(commandStatusCar: ICommandResultItem | undefined): number {
+            if (commandStatusCar === undefined) return 0;
+            if (commandStatusCar.Status === this.commandStatusOk && commandStatusCar.Arguments.includes('1')) return 1;
+            if (commandStatusCar.Status === this.commandStatusOk && commandStatusCar.Arguments.includes('0')) return -1;
+            return 0;
         }
     }
 </script>

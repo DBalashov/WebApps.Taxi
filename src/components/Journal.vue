@@ -54,11 +54,13 @@
         @Prop() private cars!: any;
         @Prop() private commandValue!: DeviceCommandType;
 
+        private readonly historyPeriodDays = 7;
+
         private log: ICommandResultItem[] = [];
 
         private mounted(): void {
             $bus.$on('RefreshCommandsLog', () => {
-                const sd = moment().startOf('day').add(-2, 'day').toDate();
+                const sd = moment().startOf('day').add(-this.historyPeriodDays, 'day').toDate();
                 const ed = moment().toDate();
 
                 this.log = [];
