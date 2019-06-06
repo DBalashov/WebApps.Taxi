@@ -142,6 +142,10 @@
                     this.treeCars[i.ParentID].push(i);
                 });
 
+                for (let id in this.treeCars) {
+                    this.treeCars[id].sort((a: IEnumDeviceItem, b: IEnumDeviceItem) => (a.Name > b.Name) ? 1 : -1);
+                }
+
                 r.Items.forEach((c: any) => this.cars[c.ID] = c);
 
                 this.refreshPositions(null);
