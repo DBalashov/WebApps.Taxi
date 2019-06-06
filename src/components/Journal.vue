@@ -17,7 +17,7 @@
                             <td v-if="currentCar == null">{{ cars[item.IDCAR].Name }}<br /><small>№{{ item.Serial }}</small></td>
                             <td>{{ item.Command }}</td>
                             <td>{{ item.DT }}</td>
-                            <td>{{ item.Response }}</td>
+                            <td>{{ item.ResponseDT }}</td>
                             <td>{{ item.Status }}</td>
                         </tr>
                     </tbody>
@@ -25,7 +25,7 @@
             </template>
             <template v-else>
                 <div class="alert alert-primary" role="alert">
-                    Нет событий
+                    Нет записей
                 </div>
             </template>
         </div>
@@ -73,6 +73,11 @@
                     this.log.forEach((item: ICommandResultItem) => {
                         const dt = getDT(item.DT, true);
                         item.DT = dt.D + ' ' + dt.T;
+
+                        if (item.ResponseDT) {
+                            const responseDT = getDT(item.ResponseDT, true);
+                            item.ResponseDT = responseDT.D + ' ' + responseDT.T;
+                        }
                     });
 
                     // --- set height
@@ -99,6 +104,10 @@
         &__wrap {
             margin: 0 -.5em;
             overflow: auto;
+
+            .alert {
+                margin: 0 .5em;
+            }
         }
 
         &__table {

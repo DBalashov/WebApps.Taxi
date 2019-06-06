@@ -34,11 +34,11 @@
         margin-bottom: 1em;
 
         &--on &__control {
-            background: #47bb00;
+            background: #d84d4d;
         }
 
         &--off &__control {
-            background: #d84d4d;
+            background: #47bb00;
         }
 
         &__control {

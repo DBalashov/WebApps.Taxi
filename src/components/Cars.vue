@@ -50,7 +50,7 @@
             border-bottom: 1px solid #eee;
 
             &:hover &-link {
-                background: rgba(121, 191, 226, 0.25);
+                background: rgba(255, 198, 93, 0.25);
             }
 
             &-link {
@@ -79,7 +79,7 @@
             }
 
             &--on:before {
-                background: #0c0;
+                background: #47bb00;
             }
 
             &--off:before {
@@ -88,7 +88,7 @@
         }
 
         &__item--active > &__name &__name-link {
-            background: #79bfe2;
+            background: #ffc65d;
         }
     }
 </style>
