@@ -20,8 +20,8 @@
                     <tbody>
                         <tr v-for="item in log">
                             <td v-if="currentCar == null">{{ cars[item.IDCAR].Name }}<br /><small>№{{ item.Serial }}</small></td>
-                            <td v-if="item.Arguments.indexOf('1') == -1">off</td>
-                            <td v-else>on</td>
+                            <td v-if="item.Arguments[1] == '1'">on</td>
+                            <td v-else>off</td>
                             <td>{{ item.DT }}</td>
                             <td>{{ item.ResponseDT }}</td>
                             <td v-if="item.Status == 0">InProgress</td>
@@ -53,6 +53,7 @@
         @Prop() private currentCar!: IEnumDeviceItem | null;
         @Prop() private cars!: any;
         @Prop() private commandName!: string;
+        @Prop() private commandOut!: string;
 
         private readonly historyPeriodDays = 7;
 
@@ -66,7 +67,9 @@
                 this.log = [];
 
                 connector.GetCommandLog(sd, ed).then((r: ICommandResultItem[]) => {
-                    const log: ICommandResultItem[] = r.filter((i: ICommandResultItem) => i.Name == this.commandName);
+                    const log: ICommandResultItem[] = r.filter((i: ICommandResultItem) => {
+                        return i.Name == this.commandName && i.Arguments.length > 0 && i.Arguments[0] == this.commandOut;
+                    });
 
                     log.reverse();
 

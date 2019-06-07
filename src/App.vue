@@ -23,9 +23,9 @@
                 </section>
                 <section class="panels__journal">
                     <template v-if="currentCar != null">
-                        <CarState v-bind:currentCar="currentCar" v-bind:commandStatusCar="commandStatusCars[currentCar.ID]" v-bind:commandStatusOk="commandStatusOk" v-bind:commandName="commandName"></CarState>
+                        <CarState v-bind:currentCar="currentCar" v-bind:commandStatusCar="commandStatusCars[currentCar.ID]" v-bind:commandStatusOk="commandStatusOk" v-bind:commandName="commandName" v-bind:commandOut="commandOut"></CarState>
                     </template>
-                    <Journal v-bind:currentCar="currentCar" v-bind:cars="cars" v-bind:commandName="commandName"></Journal>
+                    <Journal v-bind:currentCar="currentCar" v-bind:cars="cars" v-bind:commandName="commandName" v-bind:commandOut="commandOut"></Journal>
                 </section>
                 <footer class="footer">
                     &copy;&thinsp;AutoGRAPH
@@ -61,7 +61,8 @@
         }
     })
     export default class App extends Vue {
-        private readonly commandName = 'MOUT1';
+        private readonly commandName = 'MOUT';
+        private readonly commandOut = '1';
         private readonly commandStatusOk = 1;
         private map: L.Map | undefined;
         private layerCars: L.LayerGroup = L.layerGroup([], {});
@@ -98,7 +99,10 @@
             $bus.$on('ResultCommandsLog', (r: ICommandResultItem[]) => {
                 this.commandStatusCars = {};
                 r.forEach((item: ICommandResultItem) => {
-                    if (item.Name == this.commandName && ! this.commandStatusCars[item.IDCAR]) {
+                    if (item.Name == this.commandName
+                     && item.Arguments.length > 0
+                     && item.Arguments[0] == this.commandOut
+                     && ! this.commandStatusCars[item.IDCAR]) {
                         this.commandStatusCars[item.IDCAR] = item;
                     }
                 });

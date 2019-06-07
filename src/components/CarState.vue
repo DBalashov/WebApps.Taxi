@@ -20,17 +20,18 @@
         @Prop() private commandStatusCar!: ICommandResultItem | undefined;
         @Prop() private commandStatusOk!: DCStatus;
         @Prop() private commandName!: string;
+        @Prop() private commandOut!: string;
 
         private changeState(value: string): void {
-            connector.SendCommand([this.currentCar.ID], this.commandName, [value]).then((r: string[]) => {
+            connector.SendCommand([this.currentCar.ID], this.commandName, [this.commandOut, value]).then((r: string[]) => {
                 $bus.$emit('ChangeCarState', value);
             });
         }
 
         get state(): number {
             if (this.commandStatusCar === undefined) return 0;
-            if (this.commandStatusCar.Status === this.commandStatusOk && this.commandStatusCar.Arguments.includes('1')) return 1;
-            if (this.commandStatusCar.Status === this.commandStatusOk && this.commandStatusCar.Arguments.includes('0')) return -1;
+            if (this.commandStatusCar.Status === this.commandStatusOk && this.commandStatusCar.Arguments[1] == '1') return 1;
+            if (this.commandStatusCar.Status === this.commandStatusOk && this.commandStatusCar.Arguments[1] == '0') return -1;
             return 0;
         }
     }

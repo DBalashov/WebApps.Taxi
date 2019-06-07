@@ -58,8 +58,8 @@
 
         private state(commandStatusCar: ICommandResultItem | undefined): number {
             if (commandStatusCar === undefined) return 0;
-            if (commandStatusCar.Status === this.commandStatusOk && commandStatusCar.Arguments.includes('1')) return 1;
-            if (commandStatusCar.Status === this.commandStatusOk && commandStatusCar.Arguments.includes('0')) return -1;
+            if (commandStatusCar.Status === this.commandStatusOk && commandStatusCar.Arguments[1] == '1') return 1;
+            if (commandStatusCar.Status === this.commandStatusOk && commandStatusCar.Arguments[1] == '0') return -1;
             return 0;
         }
     }
